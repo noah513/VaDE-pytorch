@@ -8,19 +8,19 @@ from sklearn.mixture import GaussianMixture
 from sklearn.metrics import accuracy_score
 import numpy as np
 import os
+from scipy.optimize import linear_sum_assignment
 
 import ipdb
 
 
 def cluster_acc(Y_pred, Y):
-    from sklearn.utils.linear_assignment_ import linear_assignment
     assert Y_pred.size == Y.size
-    D = max(Y_pred.max(), Y.max())+1
-    w = np.zeros((D,D), dtype=np.int64)
+    D = max(Y_pred.max(), Y.max()) + 1
+    w = np.zeros((D, D), dtype=np.int64)
     for i in range(Y_pred.size):
         w[Y_pred[i], Y[i]] += 1
-    ind = linear_assignment(w.max() - w)
-    return sum([w[i,j] for i,j in ind])*1.0/Y_pred.size, w
+    ind = linear_sum_assignment(w.max() - w)
+    return sum([w[i, j] for i, j in zip(ind[0], ind[1])]) * 1.0 / Y_pred.size, w
 
 
 def block(in_c,out_c):
